@@ -3,10 +3,12 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 
-mongoose
-    .connect("mongodb://localhost/castify", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-    })
-    .then(() => console.log("Connected to MongoDB..."))
-    .catch((error) => console.log(`Error: ${error}`));
+const genreSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        minlength: 5,
+        maxlength: 50,
+    },
+});
+
+const Genre = mongoose.model("Genre", genreSchema);

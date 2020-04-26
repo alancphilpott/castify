@@ -1,5 +1,14 @@
 const express = require("express");
 const genres = require("./routes/genres");
+const mongoose = require("mongoose");
+
+mongoose
+    .connect("mongodb://localhost/castify", {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+    })
+    .then(() => console.log("Connected to MongoDB..."))
+    .catch((error) => console.log(`Error: ${error}`));
 
 const app = express();
 
