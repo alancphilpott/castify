@@ -71,18 +71,18 @@ router.put("/:id", async (req, res) => {
 });
 
 // Update Genre (Update First)
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
     const { error } = validateGenre(req.body);
     if (error) {
         return res.status(404).send(error.details[0].message);
     }
 
-    const course = await Genre.findByIdAndUpdate(req.params.id, { 
-        name: req.body.name 
+    const course = await Genre.findByIdAndUpdate(req.params.id, {
+        name: req.body.name,
     });
 
     res.send(course);
-})
+});
 
 // Delete & View Genre
 router.delete("/:id", async (req, res) => {
