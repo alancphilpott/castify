@@ -12,3 +12,9 @@ const genreSchema = new mongoose.Schema({
 });
 
 const Genre = mongoose.model("Genre", genreSchema);
+
+router.get("/", (req, res) => {
+    const genres = Genre.find().sort({ name: 1 });
+});
+
+module.exports = router;
