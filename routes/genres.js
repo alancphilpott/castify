@@ -45,7 +45,7 @@ router.post("/", async (req, res) => {
     res.send(newGenre);
 });
 
-// Update Genre
+// Update Genre (Query First)
 router.put("/:id", async (req, res) => {
     // Validate Request
     const { error } = validateGenre(req.body);
@@ -66,8 +66,29 @@ router.put("/:id", async (req, res) => {
         genre = await genre.save();
         res.send(genre);
     } catch (ex) {
-        return res.status(404).send(`Genre ID "${req.params.id}" Not Found`);
+        return res.status(404).send("Genre ID Not Found");
     }
+});
+
+// Update Genre (Update First)
+router.put("/:id", (req, res) => {
+    const { error } = validateGenre(req.body);
+    if (error) {
+        return res.status(404).send(error.details[0].message);
+    }
+
+    const course = await Genre.findByIdAndUpdate(req.params.id, { 
+        name: req.body.name 
+    });
+
+    res.send(course);
+})
+
+// Delete & View Genre
+router.delete("/:id", async (req, res) => {
+    const genre = await Genre.findByIdAndRemove(req.params.id);
+    if (!genre) return res.status(404).send("Genre ID Not Found");
+    res.send(genre);
 });
 
 // Validate New Course
