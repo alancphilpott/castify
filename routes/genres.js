@@ -45,31 +45,6 @@ router.post("/", async (req, res) => {
     res.send(newGenre);
 });
 
-// Update Genre (Query First)
-router.put("/:id", async (req, res) => {
-    // Validate Request
-    const { error } = validateGenre(req.body);
-    if (error) {
-        return res.status(404).send(error.details[0].message);
-    }
-
-    // Validate Exists
-    try {
-        let genre = await Genre.findById(req.params.id);
-
-        // Update Genre Props
-        genre.set({
-            name: req.body.name,
-        });
-
-        // Save to DB
-        genre = await genre.save();
-        res.send(genre);
-    } catch (ex) {
-        return res.status(404).send("Genre ID Not Found");
-    }
-});
-
 // Update Genre (Update First)
 router.put("/:id", async (req, res) => {
     const { error } = validateGenre(req.body);
