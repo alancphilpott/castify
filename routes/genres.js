@@ -4,7 +4,7 @@ const router = express.Router();
 const mongoose = require("mongoose");
 
 mongoose
-    .connect("mongodb://localhost/genres", {
+    .connect("mongodb://localhost/castify", {
         useNewUrlParser: true,
         useUnifiedTopology: true,
     })
