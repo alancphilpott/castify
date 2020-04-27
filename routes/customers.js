@@ -83,4 +83,12 @@ router.delete("/:id", async (req, res) => {
     res.send(customer);
 });
 
+function validateCustomer(customer) {
+    const schema = {
+        name: Joi.string().min(5).max(50).required(),
+        number: Joi.string().min(5).max(50).required()
+    };
+    return Joi.validate(customer, schema);
+}
+
 module.exports = router;
