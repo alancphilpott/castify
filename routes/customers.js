@@ -30,7 +30,8 @@ const Customer = mongoose.model("Customer", customerSchema);
 // Get All Customers
 router.get("/", async (req, res) => {
     const customers = await Customer.find().sort({ name: 1 });
-    if (customers.length === 0) res.status(404).send("No Customers Found");
+    if (customers.length === 0)
+        return res.status(404).send("No Customers Found");
     res.send(customers);
 });
 
