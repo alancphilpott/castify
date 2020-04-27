@@ -26,14 +26,21 @@ const customerSchema = new mongoose.Schema({
 
 const Customer = mongoose.model("Customer", customerSchema);
 
+// Get All Customers
+router.get("/", async (req, res) => {
+    const customers = await Customer.find().sort({ name: 1 });
+});
+
+// Get a Customer
 router.get();
 
-router.get();
-
+// Create a Customer
 router.post();
 
+// Update a Customer
 router.put();
 
+// Delete a Customer
 router.delete();
 
 module.exports = router;
