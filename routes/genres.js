@@ -1,9 +1,9 @@
-const Joi = require("joi");
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
-const app = express();
+const Joi = require("joi");
 
+const app = express();
 app.use(express.json());
 
 const genreSchema = new mongoose.Schema({
