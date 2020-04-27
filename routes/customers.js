@@ -52,7 +52,7 @@ router.post("/", async (req, res) => {
     let newCustomer = new Customer({
         name: req.body.name,
         isGold: req.body.isGold,
-        number: req.body.number
+        phone: req.body.phone
     });
 
     newCustomer = await newCustomer.save();
@@ -69,7 +69,7 @@ router.put("/:id", async (req, res) => {
     const customer = await Customer.findByIdAndUpdate(req.params.id, {
         name: req.body.name,
         isGold: req.body.isGold,
-        number: req.body.number
+        phone: req.body.phone
     });
 
     res.send(customer);
@@ -87,7 +87,7 @@ router.delete("/:id", async (req, res) => {
 function validateCustomer(customer) {
     const schema = {
         name: Joi.string().min(5).max(50).required(),
-        number: Joi.string().min(5).max(50).required()
+        phone: Joi.string().min(5).max(50).required()
     };
     return Joi.validate(customer, schema);
 }
