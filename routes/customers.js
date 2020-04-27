@@ -14,13 +14,13 @@ const customerSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true,
-        minlength: 5,
+        minlength: 4,
         maxlength: 50
     },
     phone: {
         type: String,
         required: true,
-        minlength: 5,
+        minlength: 6,
         maxlength: 50
     }
 });
@@ -86,8 +86,8 @@ router.delete("/:id", async (req, res) => {
 
 function validateCustomer(customer) {
     const schema = {
-        name: Joi.string().min(5).max(50).required(),
-        phone: Joi.string().min(5).max(50).required()
+        name: Joi.string().min(4).max(50).required(),
+        phone: Joi.string().min(6).max(50).required()
     };
     return Joi.validate(customer, schema);
 }
