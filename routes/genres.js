@@ -10,8 +10,8 @@ const genreSchema = new mongoose.Schema({
     name: {
         type: String,
         minlength: 5,
-        maxlength: 50,
-    },
+        maxlength: 50
+    }
 });
 
 const Genre = mongoose.model("Genre", genreSchema);
@@ -38,7 +38,7 @@ router.post("/", async (req, res) => {
     }
 
     let newGenre = new Genre({
-        name: req.body.name,
+        name: req.body.name
     });
 
     newGenre = await newGenre.save();
@@ -53,7 +53,7 @@ router.put("/:id", async (req, res) => {
     }
 
     const course = await Genre.findByIdAndUpdate(req.params.id, {
-        name: req.body.name,
+        name: req.body.name
     });
 
     res.send(course);
@@ -69,7 +69,7 @@ router.delete("/:id", async (req, res) => {
 // Validate New Course
 function validateGenre(genre) {
     const schema = {
-        name: Joi.string().min(5).max(50).required(),
+        name: Joi.string().min(5).max(50).required()
     };
     return Joi.validate(genre, schema);
 }
