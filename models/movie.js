@@ -10,7 +10,7 @@ const Movie = mongoose.model(
             required: true,
             trim: true,
             minlength: 5,
-            maxlength: 50
+            maxlength: 255
         },
         numberInStock: {
             type: Number,
@@ -29,7 +29,7 @@ const Movie = mongoose.model(
 
 function validateMovie(movie) {
     const schema = {
-        title: Joi.string().minlength(5).maxlength(50).required(),
+        title: Joi.string().minlength(5).maxlength(255).required(),
         numberInStock: Joi.number(),
         dailyRentalRate: Joi.number(),
         genre: Joi.required()
