@@ -41,9 +41,15 @@ router.put("/:id", async (req, res) => {
         return res.status(404).send(error.details[0].message);
     }
 
-    const course = await Genre.findByIdAndUpdate(req.params.id, {
-        name: req.body.name
-    });
+    const course = await Genre.findByIdAndUpdate(
+        req.params.id,
+        {
+            name: req.body.name
+        },
+        {
+            new: true
+        }
+    );
 
     res.send(course);
 });
