@@ -59,7 +59,7 @@ router.put("/", async (req, res) => {
         },
         { new: true }
     );
-
+    if (!movie) return res.status(404).send("Movie Not Found");
     res.send(movie);
 });
 

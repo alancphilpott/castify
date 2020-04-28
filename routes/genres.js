@@ -50,7 +50,7 @@ router.put("/:id", async (req, res) => {
             new: true
         }
     );
-
+    if (!genre) return res.status(404).send("Genre Not Found");
     res.send(course);
 });
 
