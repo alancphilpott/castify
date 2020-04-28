@@ -47,10 +47,7 @@ router.put("/", async (req, res) => {
         {
             title: req.body.title,
             numberInStock: req.body.numberInStock,
-            dailyRentalRate: req.body.dailyRentalRate,
-            $set: {
-                "genre.name": req.body.genre.name
-            }
+            dailyRentalRate: req.body.dailyRentalRate
         },
         { new: true }
     );
@@ -58,6 +55,10 @@ router.put("/", async (req, res) => {
     res.send(movie);
 });
 
-router.delete();
+router.delete("/:id", async (req, res) => {
+    const movie = await Movie.findByIdAndRemove(req.params.id);
+    if (!movie) return res.status(404).send("Movie ID Not Found");
+    res.send(movie);
+});
 
 module.exports = router;
