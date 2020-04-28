@@ -17,6 +17,10 @@ const Movie = mongoose.model(
         dailyRentalRate: {
             type: Number,
             default: 0
+        },
+        genre: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "genres"
         }
     })
 );
@@ -25,7 +29,8 @@ function validateMovie(movie) {
     const schema = {
         title: Joi.string().minlength(5).maxlength(50).required(),
         numberInStock: Joi.number(),
-        dailyRentalRate: Joi.number()
+        dailyRentalRate: Joi.number(),
+        genre: Joi.required()
     };
     return Joi.validate(movie, schema);
 }
