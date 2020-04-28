@@ -39,12 +39,12 @@ router.post("/", async (req, res) => {
     res.send(newMovie);
 });
 
-router.put("/", async (req, res) => {
+router.put("/:id", async (req, res) => {
     const { error } = validate(req.body);
     if (error) return res.status(400).send(error.details[0].message);
 
-    const genre = Genre.find.findById(req.body.genreId);
-    if (!genre) return res.status(400).send("Genre Does Not Exist");
+    const genre = await Genre.findById(req.body.genreId);
+    if (!genre) return res.status(404).send("Genre Does Not Exist");
 
     let movie = await Movie.findByIdAndUpdate(
         req.params.id,
