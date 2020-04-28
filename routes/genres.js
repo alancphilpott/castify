@@ -1,20 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
-const Joi = require("joi");
 
 const app = express();
 app.use(express.json());
-
-const genreSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        minlength: 5,
-        maxlength: 50
-    }
-});
-
-const Genre = mongoose.model("Genre", genreSchema);
 
 // Get All Courses
 router.get("/", async (req, res) => {
@@ -66,11 +54,4 @@ router.delete("/:id", async (req, res) => {
     res.send(genre);
 });
 
-// Validate New Course
-function validateGenre(genre) {
-    const schema = {
-        name: Joi.string().min(5).max(50).required()
-    };
-    return Joi.validate(genre, schema);
-}
 module.exports = router;
