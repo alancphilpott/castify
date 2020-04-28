@@ -8,6 +8,7 @@ const Movie = mongoose.model(
         title: {
             type: String,
             required: true,
+            trim: true,
             minlength: 5,
             maxlength: 50
         },
