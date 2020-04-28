@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const Joi = require("joi");
+const { genreSchema } = require("./genre");
 
 const Movie = mongoose.model(
     "Movie",
@@ -19,8 +20,8 @@ const Movie = mongoose.model(
             default: 0
         },
         genre: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "genres"
+            type: genreSchema,
+            required: true
         }
     })
 );
