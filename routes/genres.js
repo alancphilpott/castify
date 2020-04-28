@@ -41,7 +41,7 @@ router.put("/:id", async (req, res) => {
         return res.status(404).send(error.details[0].message);
     }
 
-    const course = await Genre.findByIdAndUpdate(
+    const genre = await Genre.findByIdAndUpdate(
         req.params.id,
         {
             name: req.body.name
@@ -51,7 +51,7 @@ router.put("/:id", async (req, res) => {
         }
     );
     if (!genre) return res.status(404).send("Genre Not Found");
-    res.send(course);
+    res.send(genre);
 });
 
 // Delete & View Genre
