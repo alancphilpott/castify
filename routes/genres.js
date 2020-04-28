@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { Genre, validate } = require("../models/genre");
 
 const app = express();
 app.use(express.json());
@@ -20,7 +21,7 @@ router.get("/:id", async (req, res) => {
 
 // Create Genre
 router.post("/", async (req, res) => {
-    const { error } = validateGenre(req.body);
+    const { error } = validate(req.body);
     if (error) {
         return res.status(404).send(error.details[0].message);
     }
@@ -35,7 +36,7 @@ router.post("/", async (req, res) => {
 
 // Update Genre (Update First)
 router.put("/:id", async (req, res) => {
-    const { error } = validateGenre(req.body);
+    const { error } = validate(req.body);
     if (error) {
         return res.status(404).send(error.details[0].message);
     }
