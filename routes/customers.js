@@ -66,11 +66,17 @@ router.put("/:id", async (req, res) => {
         return res.status(404).send(error.details[0].message);
     }
 
-    const customer = await Customer.findByIdAndUpdate(req.params.id, {
-        name: req.body.name,
-        isGold: req.body.isGold,
-        phone: req.body.phone
-    });
+    const customer = await Customer.findByIdAndUpdate(
+        req.params.id,
+        {
+            name: req.body.name,
+            isGold: req.body.isGold,
+            phone: req.body.phone
+        },
+        {
+            new: true
+        }
+    );
 
     res.send(customer);
 });
