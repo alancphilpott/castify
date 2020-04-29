@@ -48,7 +48,7 @@ router.post("/", async (req, res) => {
     });
 
     try {
-        Fawn.Task()
+        await Fawn.Task()
             .save("rentals", rental)
             .update(
                 "movies",
