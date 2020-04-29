@@ -1,11 +1,15 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
+const Fawn = require("fawn");
 const { Rental, validate } = require("../models/rental");
 const { Customer } = require("../models/customer");
 const { Movie } = require("../models/movie");
 
 const app = express();
 app.use(express.json());
+
+Fawn.init(mongoose);
 
 router.get("/", async (req, res) => {
     const rentals = await Rental.find()
@@ -43,13 +47,20 @@ router.post("/", async (req, res) => {
         rentalFee: rentalFee
     });
 
-    console.log(rental);
+    try {
+        Fawn.Task()
+            .save("rentals", rental)
+            .update(
+                "movies",
+                { _id: movie._id },
+                { $inc: { numberInStock: -1 } }
+            )
+            .run();
 
-    // movie.numberInStock--;
-    // await movie.save();
-
-    rental = await rental.save();
-    res.send(rental);
+        res.send(rental);
+    } catch (ex) {
+        res.status(500).send("Interal Server Error");
+    }
 });
 
 module.exports = router;
