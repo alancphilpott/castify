@@ -32,10 +32,15 @@ router.post("/", async (req, res) => {
     const movie = await Movie.findById(req.body.movieId);
     if (!movie) return res.status(400).send("Invalid Movie ID");
 
+    let rentalFee = movie.dailyRentalRate;
+    if (customer.isGold) {
+        rentalFee /= 2;
+    }
+
     let rental = new Rental({
         customer: customer._id,
         movie: movie._id,
-        rentalFee: movie.dailyRentalRate
+        rentalFee: rentalFee
     });
 
     console.log(rental);
