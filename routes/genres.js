@@ -26,11 +26,11 @@ router.post("/", async (req, res) => {
         return res.status(404).send(error.details[0].message);
     }
 
-    let newGenre = new Genre({
+    const newGenre = new Genre({
         name: req.body.name
     });
 
-    newGenre = await newGenre.save();
+    await newGenre.save();
     res.send(newGenre);
 });
 
