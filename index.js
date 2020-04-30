@@ -11,7 +11,7 @@ const users = require("./routes/users");
 const auth = require("./routes/auth");
 const app = express();
 
-if (config.get("SUPERSECRETKEYLOL")) {
+if (config.get("SUPERSECRETPKLOL")) {
     console.error("FATAL ERROR: JWT Secret Not Defined");
     process.exit(1);
 }
