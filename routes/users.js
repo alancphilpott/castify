@@ -18,7 +18,7 @@ router.post("/", async (req, res) => {
         password: req.body.password
     });
 
-    await user.save();
+    await newUser.save();
     res.send(newUser);
 });
 

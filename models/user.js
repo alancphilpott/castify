@@ -12,7 +12,7 @@ const User = mongoose.model(
         },
         email: {
             type: String,
-            minlength: 4,
+            minlength: 6,
             maxlength: 100,
             unique: true,
             required: true
@@ -29,7 +29,7 @@ const User = mongoose.model(
 function validateUser(user) {
     const schema = {
         name: Joi.string().min(4).max(50).required(),
-        email: Joi.string().min(4).max(100).required(),
+        email: Joi.string().min(6).max(100).required(),
         password: Joi.string().min(8).max(50).required()
     };
     return Joi.validate(user, schema);
