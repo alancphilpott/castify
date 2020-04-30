@@ -1,3 +1,4 @@
+const config = require("config");
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 const express = require("express");
@@ -8,8 +9,12 @@ const movies = require("./routes/movies");
 const rentals = require("./routes/rentals");
 const users = require("./routes/users");
 const auth = require("./routes/auth");
-
 const app = express();
+
+if (config.get("SUPERSECRETKEYLOL")) {
+    console.error("FATAL ERROR: JWT Secret Not Defined");
+    process.exit(1);
+}
 
 // Middleware
 app.use(express.json());
