@@ -1,7 +1,7 @@
-const auth = require("../middleware/auth");
 const express = require("express");
 const router = express.Router();
 const { Genre, validate } = require("../models/genre");
+const auth = require("../middleware/auth");
 
 const app = express();
 app.use(express.json());

@@ -5,6 +5,7 @@ const Fawn = require("fawn");
 const { Rental, validate } = require("../models/rental");
 const { Customer } = require("../models/customer");
 const { Movie } = require("../models/movie");
+const auth = require("../middleware/auth");
 
 const app = express();
 app.use(express.json());
