@@ -6,6 +6,7 @@ const { Rental, validate } = require("../models/rental");
 const { Customer } = require("../models/customer");
 const { Movie } = require("../models/movie");
 const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 
 const app = express();
 app.use(express.json());

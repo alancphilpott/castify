@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { Customer, validate } = require("../models/customer");
 const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 
 const app = express();
 app.use(express.json());

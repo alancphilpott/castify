@@ -3,6 +3,7 @@ const router = express.Router();
 const { Movie, validate } = require("../models/movie");
 const { Genre } = require("../models/genre");
 const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 
 const app = express();
 app.use(express.json());
