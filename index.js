@@ -27,6 +27,9 @@ app.use("/api/users", users);
 app.use("/api/auth", auth);
 
 // Error Middleware
+app.use(function (error, req, res, next) {
+    res.status(500).send("Something Went Wrong Mate");
+});
 
 // Connect to MongoDB
 mongoose
