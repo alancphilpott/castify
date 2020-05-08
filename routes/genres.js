@@ -3,19 +3,10 @@ const router = express.Router();
 const { Genre, validate } = require("../models/genre");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
+const asyncMiddleware = require("../middleware/async");
 
 const app = express();
 app.use(express.json());
-
-function asyncMiddleware(handler) {
-    return async (req, res, next) => {
-        try {
-            await handler();
-        } catch (error) {
-            next(error);
-        }
-    };
-}
 
 router.get(
     "/",
