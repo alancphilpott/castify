@@ -7,15 +7,24 @@ const admin = require("../middleware/admin");
 const app = express();
 app.use(express.json());
 
-router.get("/", async (req, res, next) => {
-    try {
+function asyncMiddleware(handler) {
+    return async (req, res, next) => {
+        try {
+            await handler();
+        } catch (error) {
+            next(error);
+        }
+    };
+}
+
+router.get(
+    "/",
+    asyncMiddleware(async (req, res, next) => {
         const genres = await Genre.find().sort({ name: 1 });
         if (genres.length === 0) return res.status(404).send("No Genres Found");
         res.send(genres);
-    } catch (error) {
-        next(error);
-    }
-});
+    })
+);
 
 router.get("/:id", async (req, res) => {
     const genre = await Genre.findById(req.params.id);

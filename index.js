@@ -9,6 +9,7 @@ const movies = require("./routes/movies");
 const rentals = require("./routes/rentals");
 const users = require("./routes/users");
 const auth = require("./routes/auth");
+const error = require("./middleware/error");
 
 const app = express();
 
@@ -27,9 +28,7 @@ app.use("/api/users", users);
 app.use("/api/auth", auth);
 
 // Error Middleware
-app.use(function (error, req, res, next) {
-    res.status(500).send("Something Went Wrong Mate");
-});
+app.use(error);
 
 // Connect to MongoDB
 mongoose
