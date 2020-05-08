@@ -9,6 +9,7 @@ const movies = require("./routes/movies");
 const rentals = require("./routes/rentals");
 const users = require("./routes/users");
 const auth = require("./routes/auth");
+
 const app = express();
 
 if (!config.get("jwtPrivateKey")) {
@@ -25,11 +26,13 @@ app.use("/api/rentals", rentals);
 app.use("/api/users", users);
 app.use("/api/auth", auth);
 
+// Error Middleware
+
 // Connect to MongoDB
 mongoose
     .connect("mongodb://localhost/castify", {
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
     })
     .then(() => console.log("Connected to MongoDB..."))
     .catch((error) => console.log(`Error: ${error}`));
