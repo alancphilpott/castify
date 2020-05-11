@@ -2,6 +2,7 @@ const config = require("config");
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 const express = require("express");
+const app = express();
 const mongoose = require("mongoose");
 const genres = require("./routes/genres");
 const customers = require("./routes/customers");
@@ -13,6 +14,13 @@ const error = require("./middleware/error");
 const winston = require("winston");
 require("winston-mongodb");
 
+// Handling Node Process Exceptions
+winston.exceptions.handle(new winston.transports.File({ filename: "UE.log" }));
+process.on("unhandledRejection", (ex) => {
+    throw ex;
+});
+
+// Add Winston Logging Transports
 winston.add(new winston.transports.File({ filename: "logfile.log" }));
 winston.add(
     new winston.transports.MongoDB({
@@ -22,8 +30,7 @@ winston.add(
     })
 );
 
-const app = express();
-
+// Check for JWT Secret Configuration
 if (!config.get("jwtPrivateKey")) {
     console.error("FATAL ERROR: JWT Secret Not Defined");
     process.exit(1);
