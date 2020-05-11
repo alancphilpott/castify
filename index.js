@@ -12,7 +12,7 @@ const auth = require("./routes/auth");
 const error = require("./middleware/error");
 const winston = require("winston");
 
-winston.add(winston.transports.File, { filename: "logfile.log" });
+winston.add(new winston.transports.File({ filename: "logfile.log" }));
 
 const app = express();
 
