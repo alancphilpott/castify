@@ -31,6 +31,7 @@ app.use("/api/auth", auth);
 app.use(error);
 
 // Connect to MongoDB
+mongoose.set("useCreateIndex", true);
 mongoose
     .connect("mongodb://localhost/castify", {
         useNewUrlParser: true,
