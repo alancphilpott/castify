@@ -11,8 +11,16 @@ const users = require("./routes/users");
 const auth = require("./routes/auth");
 const error = require("./middleware/error");
 const winston = require("winston");
+require("winston-mongodb");
 
 winston.add(new winston.transports.File({ filename: "logfile.log" }));
+winston.add(
+    new winston.transports.MongoDB({
+        db: "mongodb://localhost/castify",
+        level: "error",
+        options: { useUnifiedTopology: true }
+    })
+);
 
 const app = express();
 
@@ -38,7 +46,7 @@ mongoose.set("useCreateIndex", true);
 mongoose
     .connect("mongodb://localhost/castify", {
         useNewUrlParser: true,
-        useUnifiedTopology: true,
+        useUnifiedTopology: true
     })
     .then(() => console.log("Connected to MongoDB..."))
     .catch((error) => console.log(`Error: ${error}`));

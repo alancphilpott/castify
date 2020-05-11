@@ -30,7 +30,7 @@ router.post("/", auth, async (req, res) => {
     }
 
     const newGenre = new Genre({
-        name: req.body.name,
+        name: req.body.name
     });
 
     await newGenre.save();
@@ -46,10 +46,10 @@ router.put("/:id", auth, async (req, res) => {
     const genre = await Genre.findByIdAndUpdate(
         req.params.id,
         {
-            name: req.body.name,
+            name: req.body.name
         },
         {
-            new: true,
+            new: true
         }
     );
     if (!genre) return res.status(404).send("Genre Not Found");
