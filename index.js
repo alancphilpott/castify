@@ -10,6 +10,9 @@ const rentals = require("./routes/rentals");
 const users = require("./routes/users");
 const auth = require("./routes/auth");
 const error = require("./middleware/error");
+const winston = require("winston");
+
+winston.add(winston.transports.File, { filename: "logfile.log" });
 
 const app = express();
 
