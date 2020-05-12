@@ -2,12 +2,12 @@ const config = require("config");
 const Joi = require("joi");
 Joi.objectId = require("joi-objectid")(Joi);
 const express = require("express");
-const mongoose = require("mongoose");
 const winston = require("winston");
 require("winston-mongodb");
 
 const app = express();
 require("./startup/routes")(app);
+require("./startup/db")();
 
 // Handling Node Process Exceptions
 winston.exceptions.handle(new winston.transports.File({ filename: "UE.log" }));
@@ -30,16 +30,6 @@ if (!config.get("jwtPrivateKey")) {
     console.error("FATAL ERROR: JWT Secret Not Defined");
     process.exit(1);
 }
-
-// Connect to MongoDB
-mongoose.set("useCreateIndex", true);
-mongoose
-    .connect("mongodb://localhost/castify", {
-        useNewUrlParser: true,
-        useUnifiedTopology: true
-    })
-    .then(() => console.log("Connected to MongoDB..."))
-    .catch((error) => console.log(`Error: ${error}`));
 
 // Listen on Port
 const port = process.env.PORT || 3000;
