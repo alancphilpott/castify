@@ -1,3 +1,4 @@
+require("express-async-errors");
 const express = require("express");
 const winston = require("winston");
 const app = express();
