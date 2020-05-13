@@ -1,12 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
 const { Genre, validate } = require("../models/genre");
 
-router.get("/", async (req, res, next) => {
+router.get("/", async (req, res) => {
     const genres = await Genre.find().sort({ name: 1 });
-    if (genres.length === 0) return res.status(404).send("No Genres Found");
+    if (genres.length === 0) return res.status(404).send("No Existing Genres");
     res.send(genres);
 });
 
