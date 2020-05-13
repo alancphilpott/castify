@@ -1,15 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
 const Fawn = require("fawn");
-const { Rental, validate } = require("../models/rental");
-const { Customer } = require("../models/customer");
-const { Movie } = require("../models/movie");
+const mongoose = require("mongoose");
 const auth = require("../middleware/auth");
+const { Movie } = require("../models/movie");
 const admin = require("../middleware/admin");
-
-const app = express();
-app.use(express.json());
+const { Customer } = require("../models/customer");
+const { Rental, validate } = require("../models/rental");
 
 Fawn.init(mongoose);
 
@@ -24,7 +21,7 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
     const rental = await Rental.findById(req.params.id);
-    if (!rental) return res.status(400).send("Invalid Rental ID");
+    if (!rental) return res.status(404).send("Rental Not Found");
     res.send(rental);
 });
 
@@ -33,10 +30,10 @@ router.post("/", [auth, admin], async (req, res) => {
     if (error) return res.status(400).send(error.details[0].message);
 
     const customer = await Customer.findById(req.body.customerId);
-    if (!customer) return res.status(400).send("Invalid Customer ID");
+    if (!customer) return res.status(400).send("Invalid Customer");
 
     const movie = await Movie.findById(req.body.movieId);
-    if (!movie) return res.status(400).send("Invalid Movie ID");
+    if (!movie) return res.status(400).send("Invalid Movie");
 
     let rentalFee = movie.dailyRentalRate;
     if (customer.isGold) {
@@ -58,7 +55,6 @@ router.post("/", [auth, admin], async (req, res) => {
                 { $inc: { numberInStock: -1 } }
             )
             .run();
-
         res.send(rental);
     } catch (ex) {
         res.status(500).send("Interal Server Error");
