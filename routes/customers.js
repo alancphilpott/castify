@@ -1,11 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { Customer, validate } = require("../models/customer");
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
-
-const app = express();
-app.use(express.json());
+const { Customer, validate } = require("../models/customer");
 
 router.get("/", async (req, res) => {
     const customers = await Customer.find().sort({ name: 1 });
@@ -39,7 +36,7 @@ router.post("/", auth, async (req, res) => {
 router.put("/:id", auth, async (req, res) => {
     const { error } = validate(req.body);
     if (error) {
-        return res.status(404).send(error.details[0].message);
+        return res.status(400).send(error.details[0].message);
     }
 
     const customer = await Customer.findByIdAndUpdate(
