@@ -5,7 +5,7 @@
     "description": "Movie Rental Service",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "jest --watchAll"
     },
     "keywords": [],
     "author": "alancphilpott",
@@ -24,5 +24,8 @@
         "mongoose": "^5.9.10",
         "winston": "^3.2.1",
         "winston-mongodb": "^5.0.1"
+    },
+    "devDependencies": {
+        "jest": "^26.0.1"
     }
 }
