@@ -5,7 +5,7 @@
     "description": "Movie Rental Service",
     "main": "index.js",
     "scripts": {
-        "test": "jest --watchAll"
+        "test": "jest --watchAll --verbose"
     },
     "keywords": [],
     "author": "alancphilpott",
