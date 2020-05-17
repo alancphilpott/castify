@@ -1,13 +1,15 @@
 const winston = require("winston");
 const mongoose = require("mongoose");
+const config = require("config");
 
 module.exports = function () {
     // Connect to MongoDB
+    const db = config.get("db");
     mongoose.set("useCreateIndex", true);
     mongoose
-        .connect("mongodb://localhost/castify", {
+        .connect(db, {
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
-        .then(() => winston.info("Connected to MongoDB..."));
+        .then(() => winston.info(`Connected to ${db}`));
 };
