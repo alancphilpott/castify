@@ -1,6 +1,7 @@
 const request = require("supertest");
 const { Genre } = require("../../models/genre");
 let server;
+const endpoint = "/api/genres/";
 
 describe("/api/genres", () => {
     beforeEach(() => {
@@ -18,7 +19,7 @@ describe("/api/genres", () => {
                 { name: "Genre 2" }
             ]);
 
-            const res = await request(server).get("/api/genres");
+            const res = await request(server).get(endpoint);
             expect(res.status).toBe(200);
             expect(res.body.length).toBe(2);
             expect(res.body.some((g) => g.name == "Genre 1")).toBeTruthy();
@@ -31,14 +32,23 @@ describe("/api/genres", () => {
             const genre = new Genre({ name: "Genre 1" });
             genre.save();
 
-            const res = await request(server).get("/api/genres/" + genre._id);
+            const res = await request(server).get(endpoint + genre._id);
             expect(res.status).toBe(200);
             expect(res.body).toHaveProperty("name", genre.name);
         });
 
         it("should return 404 if invalid id is passed", async () => {
-            const res = await request(server).get("/api/genres/1");
+            const res = await request(server).get(endpoint + "1");
             expect(res.status).toBe(404);
+        });
+    });
+
+    describe("POST /", () => {
+        it("should return 401 if client is not logged in", async () => {
+            const res = await request(server)
+                .post(endpoint)
+                .send({ name: "Genre 1" });
+            expect(res.status).toBe(401);
         });
     });
 });
