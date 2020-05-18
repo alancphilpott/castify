@@ -4,8 +4,11 @@
     "private": true,
     "description": "Movie Rental Service",
     "main": "index.js",
+    "jest": {
+        "testEnvironment": "node"
+    },
     "scripts": {
-        "test": "jest --watchAll --verbose"
+        "test": "jest --detectOpenHandles --runInBand --verbose --forceExit"
     },
     "keywords": [],
     "author": "alancphilpott",
