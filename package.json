@@ -8,7 +8,7 @@
         "testEnvironment": "node"
     },
     "scripts": {
-        "test": "jest --watchAll --detectOpenHandles --runInBand --verbose"
+        "test": "jest --watchAll --detectOpenHandles --runInBand --verbose --coverage"
     },
     "keywords": [],
     "author": "alancphilpott",
