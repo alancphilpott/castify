@@ -12,13 +12,13 @@ describe("/api/returns", () => {
     let rental;
     let customer, customerId;
     let movie, movieId;
-    let token;
+    let token, payload;
 
     const execution = () => {
         return request(server)
             .post(endpoint)
             .set("x-auth-token", token)
-            .send({ customerId, movieId });
+            .send(payload);
     };
 
     beforeEach(async () => {
@@ -45,6 +45,8 @@ describe("/api/returns", () => {
             movie: movie._id
         });
         await rental.save();
+
+        payload = { customerId, movieId };
     });
 
     afterEach(async () => {
@@ -57,5 +59,23 @@ describe("/api/returns", () => {
         token = "";
         const res = await execution();
         expect(res.status).toBe(401);
+    });
+
+    it("should return 400 if customerId is not provided", async () => {
+        payload = { movieId };
+        const res = await execution();
+        expect(res.status).toBe(400);
+    });
+
+    it("should return 400 if movieId is not provided", async () => {
+        payload = { customerId };
+        const res = await execution();
+        expect(res.status).toBe(400);
+    });
+
+    it("should return 404 if no rental is found for customer/movie", async () => {
+        const res = await execution();
+        const rentalInDB = await Rental.findById(rental._id);
+        expect(rentalInDB).not.toBeNull();
     });
 });
