@@ -36,8 +36,8 @@ describe("/api/returns", () => {
         await rental.save();
     });
     afterEach(async () => {
-        server.close();
-        await Rental.remove({});
+        await server.close();
+        await Rental.deleteMany({});
     });
 
     it("should work!", async () => {
