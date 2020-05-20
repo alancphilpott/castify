@@ -12,10 +12,20 @@ describe("/api/returns", () => {
     let rental;
     let customer, customerId;
     let movie, movieId;
+    let token;
+
+    const execution = () => {
+        return request(server)
+            .post(endpoint)
+            .set("x-auth-token", token)
+            .send({ customerId, movieId });
+    };
 
     beforeEach(async () => {
         server = require("../../../index");
+        token = new User().generateAuthToken();
 
+        // Create a Rental
         customerId = mongoose.Types.ObjectId();
         customer = new Customer({
             _id: customerId,
@@ -36,29 +46,16 @@ describe("/api/returns", () => {
         });
         await rental.save();
     });
+
     afterEach(async () => {
-        server.close();
+        await server.close();
         await Rental.deleteMany({});
+        await Movie.deleteMany({});
     });
 
-    describe("POST /", () => {
-        let token;
-
-        const execution = async () => {
-            return request(server)
-                .post(endpoint)
-                .set("x-auth-token", token)
-                .send({ customerId, movieId });
-        };
-
-        beforeEach(() => {
-            token = new User().generateAuthToken();
-        });
-
-        it("should return 401 if client not logged in", async () => {
-            token = "";
-            const res = await execution();
-            expect(res.status).toBe(401);
-        });
+    it("should return 401 if client not logged in", async () => {
+        token = "";
+        const res = await execution();
+        expect(res.status).toBe(401);
     });
 });

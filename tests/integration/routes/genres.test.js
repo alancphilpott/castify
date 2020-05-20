@@ -2,15 +2,16 @@ const request = require("supertest");
 const mongoose = require("mongoose");
 const { User } = require("../../../models/user");
 const { Genre } = require("../../../models/genre");
-let server;
 const endpoint = "/api/genres/";
 
 describe("/api/genres", () => {
-    beforeEach(() => {
+    let server;
+
+    beforeEach(async () => {
         server = require("../../../index");
     });
     afterEach(async () => {
-        server.close();
+        await server.close();
         await Genre.deleteMany({});
     });
 
@@ -32,7 +33,7 @@ describe("/api/genres", () => {
     describe("GET /:id", () => {
         it("should return a genre if valid id is passed", async () => {
             const genre = new Genre({ name: "Genre 1" });
-            genre.save();
+            await genre.save();
 
             const res = await request(server).get(endpoint + genre._id);
             expect(res.status).toBe(200);
@@ -55,7 +56,7 @@ describe("/api/genres", () => {
         let token;
         let name;
 
-        const execution = async () => {
+        const execution = () => {
             return request(server)
                 .post(endpoint)
                 .set("x-auth-token", token)
@@ -105,7 +106,7 @@ describe("/api/genres", () => {
         let genre;
         let id;
 
-        const execution = async () => {
+        const execution = () => {
             return request(server)
                 .put(endpoint + id)
                 .set("x-auth-token", token)
@@ -169,7 +170,7 @@ describe("/api/genres", () => {
         let genre;
         let id;
 
-        const execution = async () => {
+        const execution = () => {
             return request(server)
                 .delete(endpoint + id)
                 .set("x-auth-token", token)

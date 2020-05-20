@@ -2,20 +2,20 @@ const request = require("supertest");
 const { User } = require("../../../models/user");
 const { Genre } = require("../../../models/genre");
 let server;
-const endpoint = "/api/genres/";
+const endpoint = "/api/genres";
 
 describe("auth middleware", () => {
     beforeEach(() => {
         server = require("../../../index");
     });
     afterEach(async () => {
-        server.close();
         await Genre.deleteMany({});
+        await server.close();
     });
 
     let token;
 
-    const execution = async () => {
+    const execution = () => {
         return request(server)
             .post(endpoint)
             .set("x-auth-token", token)
