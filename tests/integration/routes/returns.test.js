@@ -85,4 +85,9 @@ describe("/api/returns", () => {
         const res = await execution();
         expect(res.status).toBe(400);
     });
+
+    it("should return 200 if valid rental is provided", async () => {
+        const res = await execution();
+        expect(res.status).toBe(200);
+    });
 });
