@@ -74,8 +74,8 @@ describe("/api/returns", () => {
     });
 
     it("should return 404 if no rental is found for customer/movie", async () => {
+        await Rental.deleteMany({});
         const res = await execution();
-        const rentalInDB = await Rental.findById(rental._id);
-        expect(rentalInDB).not.toBeNull();
+        expect(res.status).toBe(404);
     });
 });
