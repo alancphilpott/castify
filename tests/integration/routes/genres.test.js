@@ -56,7 +56,7 @@ describe("/api/genres", () => {
         let name;
 
         const execution = async () => {
-            return await request(server)
+            return request(server)
                 .post(endpoint)
                 .set("x-auth-token", token)
                 .send({ name });
@@ -106,7 +106,7 @@ describe("/api/genres", () => {
         let id;
 
         const execution = async () => {
-            return await request(server)
+            return request(server)
                 .put(endpoint + id)
                 .set("x-auth-token", token)
                 .send({ name: newName });
@@ -170,7 +170,7 @@ describe("/api/genres", () => {
         let id;
 
         const execution = async () => {
-            return await request(server)
+            return request(server)
                 .delete(endpoint + id)
                 .set("x-auth-token", token)
                 .send();

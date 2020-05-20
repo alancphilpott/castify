@@ -16,7 +16,7 @@ describe("auth middleware", () => {
     let token;
 
     const execution = async () => {
-        return await request(server)
+        return request(server)
             .post(endpoint)
             .set("x-auth-token", token)
             .send({ name: "Genre 1" });
