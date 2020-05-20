@@ -6,6 +6,7 @@ module.exports = function () {
     // Connect to MongoDB
     const db = config.get("db");
     mongoose.set("useCreateIndex", true);
+    mongoose.set("useFindAndModify", false);
     mongoose
         .connect(db, {
             useNewUrlParser: true,
