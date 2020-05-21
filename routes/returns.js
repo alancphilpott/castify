@@ -1,7 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const { Rental } = require("../models/rental");
+const moment = require("moment");
 const auth = require("../middleware/auth");
+const { Movie } = require("../models/movie");
+const { Rental } = require("../models/rental");
 
 router.post("/", auth, async (req, res) => {
     if (!req.body.customerId)
@@ -15,6 +17,9 @@ router.post("/", auth, async (req, res) => {
     if (!rental) return res.status(404).send("Rental Not Found");
 
     if (rental.dateIn) res.status(400).send("Rental Already Processed");
+
+    rental.dateIn = new Date();
+    await rental.save();
 
     res.status(200).send();
 });
