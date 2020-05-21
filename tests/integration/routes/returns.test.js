@@ -1,3 +1,4 @@
+const moment = require("moment");
 const request = require("supertest");
 const mongoose = require("mongoose");
 const { User } = require("../../../models/user");
@@ -89,5 +90,12 @@ describe("/api/returns", () => {
     it("should return 200 if valid rental is provided", async () => {
         const res = await execution();
         expect(res.status).toBe(200);
+    });
+
+    it("should set return date if input is valid", async () => {
+        const res = await execution();
+        const rentalInDb = await Rental.findById(rental._id);
+        const timeDiff = new Date() - rentalInDb.dateIn;
+        expect(timeDiff).toBeLessThan(10 * 1000);
     });
 });
