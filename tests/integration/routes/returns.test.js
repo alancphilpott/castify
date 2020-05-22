@@ -88,9 +88,17 @@ describe("/api/returns", () => {
     });
 
     it("should set return date if input is valid", async () => {
-        const res = await execution();
+        await execution();
         const rentalInDb = await Rental.findById(rental._id);
         const timeDiff = new Date() - rentalInDb.dateIn;
         expect(timeDiff).toBeLessThan(10 * 1000);
+    });
+
+    it("should calculate rental fee if input is valid", async () => {
+        rental.dateOut = moment().add(-7, "days").toDate();
+        await rental.save();
+        await execution();
+        const rentalInDb = await Rental.findById(rental._id);
+        expect(rentalInDb.rentalFee).toBe(14);
     });
 });
