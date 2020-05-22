@@ -32,7 +32,7 @@ router.post("/", auth, async (req, res) => {
         }
     );
 
-    res.status(200).send();
+    res.status(200).send(rental);
 });
 
 module.exports = router;
