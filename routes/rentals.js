@@ -35,15 +35,17 @@ router.post("/", [auth, admin], async (req, res) => {
     const movie = await Movie.findById(req.body.movieId);
     if (!movie) return res.status(400).send("Invalid Movie");
 
-    let rentalFee = movie.dailyRentalRate;
-    if (customer.isGold) {
-        rentalFee /= 2;
-    }
-
     const rental = new Rental({
-        customer: customer._id,
-        movie: movie._id,
-        rentalFee: rentalFee
+        customer: {
+            _id: customer._id,
+            name: customer.name,
+            phone: customer.phone
+        },
+        movie: {
+            _id: movie._id,
+            title: movie.title,
+            dailyRentalRate: movie.dailyRentalRate
+        }
     });
 
     try {
