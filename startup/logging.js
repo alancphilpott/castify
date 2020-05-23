@@ -13,11 +13,4 @@ module.exports = function () {
 
     // Add Winston Logging Transports
     winston.add(new winston.transports.File({ filename: "logfile.log" }));
-    winston.add(
-        new winston.transports.MongoDB({
-            db: "mongodb://localhost/castify",
-            level: "error",
-            options: { useUnifiedTopology: true }
-        })
-    );
 };
