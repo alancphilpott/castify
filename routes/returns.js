@@ -8,10 +8,7 @@ const { Rental } = require("../models/rental");
 const validate = require("../middleware/validate");
 
 router.post("/", [auth, validate(validateReturn)], async (req, res) => {
-    const rental = await Rental.findOne({
-        "customer._id": req.body.customerId,
-        "movie._id": req.body.movieId
-    });
+    const rental = await Rental.lookup(req.body.customerId, req.body.movieId);
     if (!rental) return res.status(404).send("Rental Not Found");
 
     if (rental.dateIn) res.status(400).send("Rental Already Processed");
