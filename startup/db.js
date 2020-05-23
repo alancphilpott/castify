@@ -12,5 +12,8 @@ module.exports = function () {
             useNewUrlParser: true,
             useUnifiedTopology: true
         })
-        .then(() => winston.info(`Connected to ${db}`));
+        .then(() => {
+            winston.info(`Connected to ${db}`);
+            console.log(`***DEBUG***: Connected to ${db}`);
+        });
 };
