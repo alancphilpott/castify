@@ -25,7 +25,7 @@ router.post("/", [auth, validate(validateReturn)], async (req, res) => {
         }
     );
 
-    res.status(200).send(rental);
+    res.send(rental);
 });
 
 function validateReturn(aReturn) {
