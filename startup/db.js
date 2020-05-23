@@ -14,6 +14,5 @@ module.exports = function () {
         })
         .then(() => {
             winston.info(`Connected to ${db}`);
-            console.log(`***DEBUG***: Connected to ${db}`);
         });
 };
