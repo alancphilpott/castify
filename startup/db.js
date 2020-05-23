@@ -10,6 +10,7 @@ module.exports = function () {
     mongoose
         .connect(db, {
             useNewUrlParser: true,
+            useCreateIndex: true,
             useUnifiedTopology: true
         })
         .then(() => {
