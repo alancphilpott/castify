@@ -1,3 +1,4 @@
 {
-    "jwtPrivateKey": "castify_jwtPrivateKey"
+    "jwtPrivateKey": "castify_jwtPrivateKey",
+    "db": "castify_db"
 }
