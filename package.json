@@ -8,7 +8,11 @@
         "testEnvironment": "node"
     },
     "scripts": {
-        "test": "jest --detectOpenHandles --runInBand --verbose --watchAll"
+        "test": "jest --detectOpenHandles --runInBand --verbose --watchAll",
+        "start": "node index.js"
+    },
+    "engines": {
+        "node": "12.16.3"
     },
     "keywords": [],
     "author": "alancphilpott",
@@ -16,10 +20,12 @@
     "dependencies": {
         "@hapi/joi": "^17.1.1",
         "bcrypt": "^4.0.1",
+        "compression": "^1.7.4",
         "config": "^3.3.1",
         "express": "^4.17.1",
         "express-async-errors": "^3.1.1",
         "fawn": "^2.1.5",
+        "helmet": "^3.22.0",
         "joi-objectid": "^3.0.1",
         "joi-password-complexity": "^4.1.0",
         "jsonwebtoken": "^8.5.1",
