@@ -16,7 +16,6 @@ router.post("/", validate(validateUser), async (req, res) => {
 
     user = new User(_.pick(req.body, ["name", "email", "password"]));
     await user.encrypt(user.password);
-
     await user.save();
 
     const token = user.generateAuthToken();
