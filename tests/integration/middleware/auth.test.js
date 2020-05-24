@@ -1,19 +1,22 @@
 const request = require("supertest");
 const { User } = require("../../../models/user");
 const { Genre } = require("../../../models/genre");
-let server;
-const endpoint = "/api/genres";
 
 describe("auth middleware", () => {
+    const endpoint = "/api/genres";
+
+    let server;
+    let token;
+
     beforeEach(() => {
         server = require("../../../index");
+        token = new User().generateAuthToken();
     });
+
     afterEach(async () => {
         await Genre.deleteMany({});
         await server.close();
     });
-
-    let token;
 
     const execution = () => {
         return request(server)
@@ -21,10 +24,6 @@ describe("auth middleware", () => {
             .set("x-auth-token", token)
             .send({ name: "Genre 1" });
     };
-
-    beforeEach(() => {
-        token = new User().generateAuthToken();
-    });
 
     it("should return 401 if no token is provided", async () => {
         token = "";

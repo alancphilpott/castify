@@ -2,9 +2,10 @@ const request = require("supertest");
 const mongoose = require("mongoose");
 const { User } = require("../../../models/user");
 const { Genre } = require("../../../models/genre");
-const endpoint = "/api/genres/";
 
 describe("/api/genres", () => {
+    const endpoint = "/api/genres/";
+
     let server;
 
     beforeEach(async () => {
