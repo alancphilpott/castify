@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
-const bcrypt = require("bcrypt");
 const auth = require("../middleware/auth");
 const validate = require("../middleware/validate");
 const { User, validateUser } = require("../models/user");
@@ -16,7 +15,7 @@ router.post("/", validate(validateUser), async (req, res) => {
     if (user) return res.status(400).send("User Already Exists");
 
     user = new User(_.pick(req.body, ["name", "email", "password"]));
-    user.password = await bcrypt.hash(user.password, await bcrypt.genSalt(10));
+    await user.encrypt(user.password);
 
     await user.save();
 

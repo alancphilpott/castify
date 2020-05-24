@@ -1,5 +1,6 @@
 const Joi = require("@hapi/joi");
 const config = require("config");
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
@@ -34,6 +35,11 @@ userSchema.methods.generateAuthToken = function () {
         { _id: this._id, isAdmin: this.isAdmin },
         config.get("jwtPrivateKey")
     );
+};
+
+userSchema.methods.encrypt = async function (password) {
+    this.password = await bcrypt.hash(password, await bcrypt.genSalt(10));
+    console.log(this.password);
 };
 
 const User = mongoose.model("User", userSchema);
