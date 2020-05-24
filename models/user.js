@@ -39,7 +39,6 @@ userSchema.methods.generateAuthToken = function () {
 
 userSchema.methods.encrypt = async function (password) {
     this.password = await bcrypt.hash(password, await bcrypt.genSalt(10));
-    console.log(this.password);
 };
 
 const User = mongoose.model("User", userSchema);
