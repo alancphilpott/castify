@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const _ = require("lodash");
 const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 const validate = require("../middleware/validate");
 const { User, validateUser } = require("../models/user");
 
@@ -22,6 +23,20 @@ router.post("/", validate(validateUser), async (req, res) => {
     res.header("x-auth-token", token).send(
         _.pick(user, ["_id", "name", "email"])
     );
+});
+
+router.put("/admin/:id", [auth, admin], async (req, res) => {
+    const user = await User.findByIdAndUpdate(
+        req.params.id,
+        {
+            isAdmin: true
+        },
+        {
+            new: true
+        }
+    );
+    if (!user) return res.status(404).send("User Not Found");
+    res.send(_.pick(user, ["_id", "name", "email", "isAdmin"]));
 });
 
 module.exports = router;
