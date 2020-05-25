@@ -128,4 +128,64 @@ describe("/api/users", () => {
             );
         });
     });
+
+    describe("PUT /admin/:id", () => {
+        let adminToken, userToken, userId, adminId;
+
+        const exec = () => {
+            return request(server)
+                .put(endpoint + "admin/" + userId)
+                .set("x-auth-token", adminToken)
+                .send();
+        };
+
+        beforeEach(async () => {
+            adminId = mongoose.Types.ObjectId();
+            const adminUser = new User({
+                _id: adminId,
+                name: "1234",
+                email: "adminEmail",
+                password: "12345678",
+                isAdmin: true
+            });
+            await adminUser.save();
+            adminToken = adminUser.generateAuthToken();
+
+            userId = mongoose.Types.ObjectId();
+            const user = new User({
+                _id: userId,
+                name: "1234",
+                email: "userEmail",
+                password: "12345678"
+            });
+            userToken = user.generateAuthToken();
+            await user.save();
+        });
+
+        it("should return 401 if no token provided", async () => {
+            adminToken = "";
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
+
+        it("should return 403 if client is not admin", async () => {
+            adminToken = userToken;
+            const res = await exec();
+            expect(res.status).toBe(403);
+        });
+
+        it("should return 404 if no user is found", async () => {
+            userId = new mongoose.Types.ObjectId();
+            const res = await exec();
+            expect(res.status).toBe(404);
+        });
+
+        it("should return the updated user with isAdmin set to true", async () => {
+            const res = await exec();
+            expect(Object.keys(res.body)).toEqual(
+                expect.arrayContaining(["_id", "name", "email", "isAdmin"])
+            );
+            expect(res.body.isAdmin).toBeTruthy();
+        });
+    });
 });
