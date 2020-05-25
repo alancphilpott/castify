@@ -49,8 +49,6 @@ describe("/api/movies", () => {
             await movie.save();
         });
 
-        console.log(movie);
-
         it("should return a movie if valid id is passed", async () => {
             const res = await request(server).get(endpoint + movie._id);
             expect(res.status).toBe(200);
