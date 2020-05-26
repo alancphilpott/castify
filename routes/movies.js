@@ -5,6 +5,7 @@ const auth = require("../middleware/auth");
 const { Genre } = require("../models/genre");
 const admin = require("../middleware/admin");
 const { Movie, validate } = require("../models/movie");
+const validateObjectId = require("../middleware/validateObjectId");
 
 router.get("/", async (req, res) => {
     const movies = await Movie.find().sort({ name: 1 });
@@ -12,9 +13,7 @@ router.get("/", async (req, res) => {
     res.send(movies);
 });
 
-router.get("/:id", async (req, res) => {
-    const validId = mongoose.Types.ObjectId.isValid(req.params.id);
-    if (!validId) res.status(400).send("Invalid Mongoose ID");
+router.get("/:id", validateObjectId, async (req, res) => {
     const movie = await Movie.findById(req.params.id);
     if (!movie) return res.status(404).send("Movie Not Found");
     res.send(movie);
