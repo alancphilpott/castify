@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const mongoose = require("mongoose");
 const auth = require("../middleware/auth");
 const { Genre } = require("../models/genre");
 const admin = require("../middleware/admin");
-const { Movie, validate } = require("../models/movie");
+const validate = require("../middleware/validate");
+const { Movie, validateMovie } = require("../models/movie");
 const validateObjectId = require("../middleware/validateObjectId");
 
 router.get("/", async (req, res) => {
@@ -19,10 +19,7 @@ router.get("/:id", validateObjectId, async (req, res) => {
     res.send(movie);
 });
 
-router.post("/", auth, async (req, res) => {
-    const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
+router.post("/", [auth, validate(validateMovie)], async (req, res) => {
     const genre = await Genre.findById(req.body.genreId);
     if (!genre) return res.status(404).send("Genre Does Not Exist");
 
@@ -40,10 +37,7 @@ router.post("/", auth, async (req, res) => {
     res.send(newMovie);
 });
 
-router.put("/:id", auth, async (req, res) => {
-    const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
+router.put("/:id", [auth, validate(validateMovie)], async (req, res) => {
     const genre = await Genre.findById(req.body.genreId);
     if (!genre) return res.status(404).send("Genre Does Not Exist");
 
