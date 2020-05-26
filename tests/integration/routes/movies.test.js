@@ -135,7 +135,7 @@ describe("/api/movies", () => {
         });
     });
 
-    describe("PUT /", () => {
+    describe("PUT /:id", () => {
         let token;
         let movie, movieId, newTitle;
         let genre, genreId;
@@ -214,6 +214,69 @@ describe("/api/movies", () => {
                 expect.arrayContaining(["_id", "title", "genre"])
             );
             expect(res.body).toHaveProperty("title", "A New Movie");
+        });
+    });
+
+    describe("DELETE /:id", () => {
+        let token;
+        let movie, movieId;
+        let genre, genreId;
+
+        const exec = () => {
+            return request(server)
+                .delete(endpoint + movieId)
+                .set("x-auth-token", token)
+                .send({ movieId });
+        };
+
+        beforeEach(async () => {
+            genre = new Genre({ name: "A Genre" });
+            await genre.save();
+            genreId = genre._id;
+
+            movie = new Movie({
+                title: "A Movie",
+                genre: {
+                    _id: genreId,
+                    name: genre.name
+                }
+            });
+            await movie.save();
+            movieId = movie._id;
+
+            token = new User({ isAdmin: true }).generateAuthToken();
+        });
+
+        it("should return 401 if no auth token provided", async () => {
+            token = "";
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
+
+        it("should return 403 if user is not admin", async () => {
+            token = new User().generateAuthToken();
+            const res = await exec();
+            expect(res.status).toBe(403);
+        });
+
+        it("should return 404 if movie not found for given id", async () => {
+            movieId = mongoose.Types.ObjectId();
+            const res = await exec();
+            expect(res.status).toBe(404);
+        });
+
+        it("should delete movie if valid movieId is given", async () => {
+            await exec();
+            const deletedMovie = await Movie.find({ name: "A Movie" });
+            expect(deletedMovie).toEqual(expect.arrayContaining([]));
+        });
+
+        it("should return deleted movie in body of response", async () => {
+            const res = await exec();
+            expect(Object.keys(res.body)).toEqual(
+                expect.arrayContaining(["_id", "title", "genre"])
+            );
+            expect(res.body).toHaveProperty("title", "A Movie");
         });
     });
 });
