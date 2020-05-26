@@ -43,7 +43,7 @@ describe("/api/genres", () => {
 
         it("should return 404 if invalid id is passed", async () => {
             const res = await request(server).get(endpoint + "1");
-            expect(res.status).toBe(404);
+            expect(res.status).toBe(400);
         });
 
         it("should return 404 if no genre with given id exists", async () => {
@@ -132,7 +132,7 @@ describe("/api/genres", () => {
         it("should return 404 if id is invalid", async () => {
             id = "1";
             const res = await execution();
-            expect(res.status).toBe(404);
+            expect(res.status).toBe(400);
         });
 
         it("should return 400 if genre is less than 5 characters", async () => {
@@ -201,7 +201,7 @@ describe("/api/genres", () => {
         it("should return 404 if id is invalid", async () => {
             id = "1";
             const res = await execution();
-            expect(res.status).toBe(404);
+            expect(res.status).toBe(400);
         });
 
         it("should return 404 if genre not found", async () => {
