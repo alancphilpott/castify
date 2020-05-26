@@ -73,7 +73,7 @@ describe("/api/movies", () => {
         let title;
         let genre, genreId;
 
-        const execution = () => {
+        const exec = () => {
             return request(server)
                 .post(endpoint)
                 .set("x-auth-token", token)
@@ -92,42 +92,42 @@ describe("/api/movies", () => {
 
         it("should return 401 if client is not logged in", async () => {
             token = "";
-            const res = await execution();
+            const res = await exec();
             expect(res.status).toBe(401);
         });
 
         it("should return 400 if title is less than 5 characters", async () => {
             title = "1234";
-            const res = await execution();
+            const res = await exec();
             expect(res.status).toBe(400);
         });
 
         it("should return 400 if title is more than 255 characters", async () => {
             title = new Array(257).join("a");
-            const res = await execution();
+            const res = await exec();
             expect(res.status).toBe(400);
         });
 
         it("should return 400 if genreId is not provided", async () => {
             genreId = "";
-            const res = await execution();
+            const res = await exec();
             expect(res.status).toBe(400);
         });
 
         it("should return 404 if genre with given id not found", async () => {
             genreId = mongoose.Types.ObjectId();
-            const res = await execution();
+            const res = await exec();
             expect(res.status).toBe(404);
         });
 
         it("should save the movie if it is valid", async () => {
-            await execution();
+            await exec();
             const movie = await Movie.find({ name: "A Movie" });
             expect(movie).not.toBeNull();
         });
 
         it("should return valid movie in body of response", async () => {
-            const res = await execution();
+            const res = await exec();
             expect(Object.keys(res.body)).toEqual(
                 expect.arrayContaining(["_id", "title", "genre"])
             );
@@ -140,7 +140,7 @@ describe("/api/movies", () => {
         let movie, movieId, newTitle;
         let genre, genreId;
 
-        const execution = () => {
+        const exec = () => {
             return request(server)
                 .put(endpoint + movieId)
                 .set("x-auth-token", token)
@@ -168,48 +168,54 @@ describe("/api/movies", () => {
 
         it("should return 401 if client is not logged in", async () => {
             token = "";
-            const res = await execution();
+            const res = await exec();
             expect(res.status).toBe(401);
+        });
+
+        it("should return 400 if invalid id is passed", async () => {
+            movieId = "1";
+            const res = await exec();
+            expect(res.status).toBe(400);
         });
 
         it("should return 400 if title is less than 5 characters", async () => {
             newTitle = "1234";
-            const res = await execution();
+            const res = await exec();
             expect(res.status).toBe(400);
         });
 
         it("should return 400 if title is more than 255 characters", async () => {
             newTitle = new Array(257).join("a");
-            const res = await execution();
+            const res = await exec();
             expect(res.status).toBe(400);
         });
 
         it("should return 400 if genreId is not provided", async () => {
             genreId = "";
-            const res = await execution();
+            const res = await exec();
             expect(res.status).toBe(400);
         });
 
         it("should return 404 if genre with given id not found", async () => {
             genreId = mongoose.Types.ObjectId();
-            const res = await execution();
+            const res = await exec();
             expect(res.status).toBe(404);
         });
 
         it("should return 404 if movie with given id not found", async () => {
             movieId = mongoose.Types.ObjectId();
-            const res = await execution();
+            const res = await exec();
             expect(res.status).toBe(404);
         });
 
         it("should update the movie if it is valid", async () => {
-            await execution();
+            await exec();
             const updatedMovie = await Movie.find({ name: "A New Movie" });
             expect(movie).not.toBeNull();
         });
 
         it("should return valid movie in body of response", async () => {
-            const res = await execution();
+            const res = await exec();
             expect(Object.keys(res.body)).toEqual(
                 expect.arrayContaining(["_id", "title", "genre"])
             );
@@ -257,6 +263,12 @@ describe("/api/movies", () => {
             token = new User().generateAuthToken();
             const res = await exec();
             expect(res.status).toBe(403);
+        });
+
+        it("should return 400 if invalid id is passed", async () => {
+            movieId = "1";
+            const res = await exec();
+            expect(res.status).toBe(400);
         });
 
         it("should return 404 if movie not found for given id", async () => {
