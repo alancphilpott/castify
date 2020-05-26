@@ -3,7 +3,7 @@ const { User } = require("../../../models/user");
 
 describe("/api/auth/", () => {
     let server;
-    let endpoint = "/api/auth/";
+    let endpoint = "/api/auth";
     let user;
     let email, password;
 
@@ -15,8 +15,8 @@ describe("/api/auth/", () => {
             email: "example@example.com",
             password: "password"
         });
-        user.encrypt(user.password);
-        user.save();
+        await user.encrypt(user.password);
+        await user.save();
 
         email = "example@example.com";
         password = "password";
@@ -67,8 +67,9 @@ describe("/api/auth/", () => {
         expect(res.status).toBe(400);
     });
 
-    it("should return auth token in header of response when valid credentials supplied", async () => {
+    it("should return auth token in response header if valid credentials", async () => {
         const res = await exec();
+        expect(res.status).toBe(200);
         expect(res.header).toHaveProperty("x-auth-token");
     });
 });
