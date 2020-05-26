@@ -119,5 +119,19 @@ describe("/api/movies", () => {
             const res = await execution();
             expect(res.status).toBe(404);
         });
+
+        it("should save the movie if it is valid", async () => {
+            await execution();
+            const movie = await Movie.find({ name: "A Movie" });
+            expect(movie).not.toBeNull();
+        });
+
+        it("should return valid movie in body of response", async () => {
+            const res = await execution();
+            expect(Object.keys(res.body)).toEqual(
+                expect.arrayContaining(["_id", "title", "genre"])
+            );
+            expect(res.body).toHaveProperty("title", "A Movie");
+        });
     });
 });
