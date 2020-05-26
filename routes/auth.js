@@ -4,11 +4,9 @@ const _ = require("lodash");
 const bcrypt = require("bcrypt");
 const Joi = require("@hapi/joi");
 const { User } = require("../models/user");
+const validate = require("../middleware/validate");
 
-router.post("/", async (req, res) => {
-    const { error } = validateLogin(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
+router.post("/", validate(validateLogin), async (req, res) => {
     let user = await User.findOne({ email: req.body.email });
     if (!user) return res.status(400).send("Invalid Email or Password");
 
