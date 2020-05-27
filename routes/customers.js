@@ -2,8 +2,9 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
+const validate = require("../middleware/validate");
 const validateObjectId = require("../middleware/validateObjectId");
-const { Customer, validate } = require("../models/customer");
+const { Customer, validateCustomer } = require("../models/customer");
 
 router.get("/", async (req, res) => {
     const customers = await Customer.find().sort({ name: 1 });
@@ -18,12 +19,7 @@ router.get("/:id", validateObjectId, async (req, res) => {
     res.send(customer);
 });
 
-router.post("/", auth, async (req, res) => {
-    const { error } = validate(req.body);
-    if (error) {
-        return res.status(400).send(error.details[0].message);
-    }
-
+router.post("/", [auth, validate(validateCustomer)], async (req, res) => {
     let customer = await Customer.findOne({ phone: req.body.phone });
     if (customer) return res.status(400).send("Customer Already Exists");
 
