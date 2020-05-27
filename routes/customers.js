@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const admin = require("../middleware/admin");
+const validateObjectId = require("../middleware/validateObjectId");
 const { Customer, validate } = require("../models/customer");
 
 router.get("/", async (req, res) => {
@@ -11,7 +12,7 @@ router.get("/", async (req, res) => {
     res.send(customers);
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", validateObjectId, async (req, res) => {
     const customer = await Customer.findById(req.params.id);
     if (!customer) res.status(404).send("Customer ID Not Found");
     res.send(customer);
