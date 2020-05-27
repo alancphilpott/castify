@@ -91,7 +91,7 @@ describe("/api/customers", () => {
         it("should return 400 if customer already exists", async () => {
             const customer = new Customer({
                 name: "1234",
-                email: "123456"
+                phone: "123456"
             });
             await customer.save();
             const res = await exec();
