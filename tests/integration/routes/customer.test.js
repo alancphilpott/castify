@@ -145,7 +145,6 @@ describe("/api/customers", () => {
     describe("PUT /:id", () => {
         let payload, token;
         let customer, customerId;
-        let name, phone;
 
         const exec = () => {
             return request(server)
@@ -224,6 +223,67 @@ describe("/api/customers", () => {
                 expect.arrayContaining(["_id", "name", "phone"])
             );
             expect(res.body).toHaveProperty("name", "Updated Customer");
+        });
+    });
+
+    describe("DELETE /:id", () => {
+        let token;
+        let customer, customerId;
+
+        const exec = () => {
+            return request(server)
+                .delete(endpoint + customerId)
+                .set("x-auth-token", token)
+                .send();
+        };
+
+        beforeEach(async () => {
+            customer = new Customer({
+                name: "Customer 1",
+                phone: "123456789"
+            });
+            await customer.save();
+            customerId = customer._id;
+
+            token = new User({ isAdmin: true }).generateAuthToken();
+        });
+
+        it("should return 401 if no auth token provided", async () => {
+            token = "";
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
+
+        it("should return 403 if user is not admin", async () => {
+            token = new User().generateAuthToken();
+            const res = await exec();
+            expect(res.status).toBe(403);
+        });
+
+        it("should return 400 if invalid id is passed", async () => {
+            customerId = "1";
+            const res = await exec();
+            expect(res.status).toBe(400);
+        });
+
+        it("should return 404 if movie not found for given id", async () => {
+            customerId = mongoose.Types.ObjectId();
+            const res = await exec();
+            expect(res.status).toBe(404);
+        });
+
+        it("should delete movie if valid movieId is given", async () => {
+            await exec();
+            const deletedCustomer = await Customer.find({ name: "Customer 1" });
+            expect(deletedCustomer).toEqual(expect.arrayContaining([]));
+        });
+
+        it("should return deleted movie in body of response", async () => {
+            const res = await exec();
+            expect(Object.keys(res.body)).toEqual(
+                expect.arrayContaining(["_id", "name", "phone"])
+            );
+            expect(res.body).toHaveProperty("name", "Customer 1");
         });
     });
 });
