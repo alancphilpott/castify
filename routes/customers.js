@@ -33,26 +33,25 @@ router.post("/", [auth, validate(validateCustomer)], async (req, res) => {
     res.send(newCustomer);
 });
 
-router.put("/:id", auth, async (req, res) => {
-    const { error } = validate(req.body);
-    if (error) {
-        return res.status(400).send(error.details[0].message);
+router.put(
+    "/:id",
+    [auth, validateObjectId, validate(validateCustomer)],
+    async (req, res) => {
+        const customer = await Customer.findByIdAndUpdate(
+            req.params.id,
+            {
+                name: req.body.name,
+                isGold: req.body.isGold,
+                phone: req.body.phone
+            },
+            {
+                new: true
+            }
+        );
+        if (!customer) return res.status(404).send("Customer Not Found");
+        res.send(customer);
     }
-
-    const customer = await Customer.findByIdAndUpdate(
-        req.params.id,
-        {
-            name: req.body.name,
-            isGold: req.body.isGold,
-            phone: req.body.phone
-        },
-        {
-            new: true
-        }
-    );
-    if (!customer) return res.status(404).send("Customer Not Found");
-    res.send(customer);
-});
+);
 
 router.delete("/:id", [auth, admin], async (req, res) => {
     const customer = await Customer.findByIdAndRemove(req.params.id);
