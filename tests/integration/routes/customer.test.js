@@ -141,4 +141,81 @@ describe("/api/customers", () => {
             );
         });
     });
+
+    describe("PUT /:id", () => {
+        let payload, token;
+        let customer, customerId;
+        let name, phone;
+
+        const exec = () => {
+            return request(server)
+                .put(endpoint + customerId)
+                .set("x-auth-token", token)
+                .send({ name, phone });
+        };
+
+        beforeEach(async () => {
+            customer = new Customer({
+                name: "Customer 1",
+                phone: "123456789"
+            });
+            await customer.save();
+            customerId = customer._id;
+
+            token = new User().generateAuthToken();
+
+            name = "Updated Customer";
+            phone = "1234567890";
+        });
+
+        it("should return 401 if auth token not provided", async () => {
+            token = "";
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
+
+        it("should return 400 if invalid if is passed", async () => {
+            customerId = mongoose.Types.ObjectId();
+            const res = await exec();
+            expect(res.status).toBe(400);
+        });
+
+        it("should return 400 if name is less than 4 characters", async () => {
+            name = "123";
+            const res = await exec();
+            expect(res.status).toBe(400);
+        });
+
+        it("should return 400 if name is more than 50 characters", async () => {
+            name = new Array(52).join("a");
+            const res = await exec();
+            expect(res.status).toBe(400);
+        });
+
+        it("should return 400 if phone is less than 6 characters", async () => {
+            phone = "12345";
+            const res = await exec();
+            expect(res.status).toBe(400);
+        });
+
+        it("should return 400 if phone is more than 50 characters", async () => {
+            phone = new Array(52).join("a");
+            const res = await exec();
+            expect(res.status).toBe(400);
+        });
+
+        it("should update customer if it is valid", async () => {
+            await exec();
+            const customerInDb = await Customer.findOne({ name });
+            expect(customerInDb).not.toBeNull();
+        });
+
+        it("should return updated movie in body of response", async () => {
+            const res = await exec();
+            expect(Object.keys(res.body)).toEqual(
+                expect.arrayContaining(["_id", "name", "phone"])
+            );
+            expect(res.body).toHaveProperty("name", name);
+        });
+    });
 });
