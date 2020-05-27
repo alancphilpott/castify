@@ -40,6 +40,42 @@ describe("/api/customers", () => {
         });
     });
 
+    describe("GET /:id", () => {
+        let customer, customerId;
+
+        const exec = () => {
+            return request(server)
+                .get(endpoint + customerId)
+                .send();
+        };
+
+        beforeEach(async () => {
+            customer = new Customer({ name: "1234", phone: "123456" });
+            await customer.save();
+
+            customerId = customer._id;
+        });
+
+        it("should return 400 if invalid id is passed", async () => {
+            customerId = "1";
+            const res = await exec();
+            expect(res.status).toBe(400);
+        });
+
+        it("should return 404 if no customers exist", async () => {
+            customerId = mongoose.Types.ObjectId();
+            const res = await exec();
+            expect(res.status).toBe(404);
+        });
+
+        it("should return a customer if valid id is passed", async () => {
+            const res = await exec();
+            expect(Object.keys(res.body)).toEqual(
+                expect.arrayContaining(["_id", "name", "phone"])
+            );
+        });
+    });
+
     describe("POST /", () => {
         let payload, token;
 
