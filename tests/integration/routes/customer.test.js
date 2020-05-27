@@ -151,7 +151,7 @@ describe("/api/customers", () => {
             return request(server)
                 .put(endpoint + customerId)
                 .set("x-auth-token", token)
-                .send({ name, phone });
+                .send(payload);
         };
 
         beforeEach(async () => {
@@ -164,8 +164,10 @@ describe("/api/customers", () => {
 
             token = new User().generateAuthToken();
 
-            name = "Updated Customer";
-            phone = "1234567890";
+            payload = {
+                name: "Updated Customer",
+                phone: "1234567890"
+            };
         });
 
         it("should return 401 if auth token not provided", async () => {
@@ -174,39 +176,45 @@ describe("/api/customers", () => {
             expect(res.status).toBe(401);
         });
 
-        it("should return 400 if invalid if is passed", async () => {
-            customerId = mongoose.Types.ObjectId();
+        it("should return 400 if invalid id is passed", async () => {
+            customerId = "1";
             const res = await exec();
             expect(res.status).toBe(400);
         });
 
         it("should return 400 if name is less than 4 characters", async () => {
-            name = "123";
+            payload.name = "123";
             const res = await exec();
             expect(res.status).toBe(400);
         });
 
         it("should return 400 if name is more than 50 characters", async () => {
-            name = new Array(52).join("a");
+            payload.name = new Array(52).join("a");
             const res = await exec();
             expect(res.status).toBe(400);
         });
 
         it("should return 400 if phone is less than 6 characters", async () => {
-            phone = "12345";
+            payload.phone = "12345";
             const res = await exec();
             expect(res.status).toBe(400);
         });
 
         it("should return 400 if phone is more than 50 characters", async () => {
-            phone = new Array(52).join("a");
+            payload.phone = new Array(52).join("a");
             const res = await exec();
             expect(res.status).toBe(400);
         });
 
+        it("should return 404 if customer with given id not found", async () => {
+            customerId = mongoose.Types.ObjectId();
+            const res = await exec();
+            expect(res.status).toBe(404);
+        });
+
         it("should update customer if it is valid", async () => {
             await exec();
-            const customerInDb = await Customer.findOne({ name });
+            const customerInDb = await Customer.findOne({ name: payload.name });
             expect(customerInDb).not.toBeNull();
         });
 
@@ -215,7 +223,7 @@ describe("/api/customers", () => {
             expect(Object.keys(res.body)).toEqual(
                 expect.arrayContaining(["_id", "name", "phone"])
             );
-            expect(res.body).toHaveProperty("name", name);
+            expect(res.body).toHaveProperty("name", "Updated Customer");
         });
     });
 });
