@@ -23,6 +23,9 @@ router.post("/", auth, async (req, res) => {
         return res.status(400).send(error.details[0].message);
     }
 
+    let customer = await Customer.findOne({ phone: req.body.phone });
+    if (customer) return res.status(400).send("Customer Already Exists");
+
     const newCustomer = new Customer({
         name: req.body.name,
         isGold: req.body.isGold,
