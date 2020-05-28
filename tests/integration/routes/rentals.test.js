@@ -1,4 +1,5 @@
 const request = require("supertest");
+const { User } = require("../../../models/user");
 const { Genre } = require("../../../models/genre");
 const { Movie } = require("../../../models/movie");
 const { Rental } = require("../../../models/rental");
@@ -11,7 +12,7 @@ describe("/api/rentals", () => {
     let genre;
     let movie;
     let customer;
-    let rental;
+    let token;
 
     beforeEach(async () => {
         server = require("../../../index");
@@ -35,6 +36,8 @@ describe("/api/rentals", () => {
             isGold: true
         });
         await customer.save();
+
+        token = new User({ isAdmin: true }).generateAuthToken();
     });
 
     afterEach(async () => {
@@ -47,8 +50,17 @@ describe("/api/rentals", () => {
 
     describe("GET /", () => {
         const exec = () => {
-            return request(server).get(endpoint).send();
+            return request(server)
+                .get(endpoint)
+                .set("x-auth-token", token)
+                .send();
         };
+
+        it("should return 401 if no token provided", async () => {
+            token = "";
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
 
         it("should return 404 if not rentals exist", async () => {
             await Customer.deleteMany({});
