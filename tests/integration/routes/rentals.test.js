@@ -21,11 +21,19 @@ describe("/api/rentals", () => {
         await genre.save();
 
         // Save a Movie
-        movie = new Movie({ title: "A Movie", genre: genre._id });
+        movie = new Movie({
+            title: "A Movie",
+            genre: genre._id,
+            dailyRentalRate: 2
+        });
         await movie.save();
 
         // Save a Customer
-        customer = new Customer({ name: "A Customer", phone: "123456789" });
+        customer = new Customer({
+            name: "A Customer",
+            phone: "123456789",
+            isGold: true
+        });
         await customer.save();
     });
 
@@ -43,8 +51,55 @@ describe("/api/rentals", () => {
         };
 
         it("should return 404 if not rentals exist", async () => {
+            await Customer.deleteMany({});
             const res = await exec();
-            expect(res).toBe(404);
+            expect(res.status).toBe(404);
+        });
+
+        it("should return all rentals", async () => {
+            // Save a 2nd Customer
+            let anotherCustomer = new Customer({
+                name: "Another Customer",
+                phone: "987654321"
+            });
+            await anotherCustomer.save();
+
+            await Rental.insertMany([
+                {
+                    customer: {
+                        _id: customer._id,
+                        name: customer.name,
+                        phone: customer.phone
+                    },
+                    movie: {
+                        _id: movie._id,
+                        title: movie.title,
+                        dailyRentalRate: movie.dailyRentalRate
+                    }
+                },
+                {
+                    customer: {
+                        _id: anotherCustomer._id,
+                        name: anotherCustomer.name,
+                        phone: anotherCustomer.phone
+                    },
+                    movie: {
+                        _id: movie._id,
+                        title: movie.title,
+                        dailyRentalRate: movie.dailyRentalRate
+                    }
+                }
+            ]);
+
+            const res = await exec();
+            expect(res.status).toBe(200);
+            expect(res.body.length).toBe(2);
+            expect(
+                res.body.some((r) => r.customer._id == customer._id)
+            ).toBeTruthy();
+            expect(
+                res.body.some((r) => r.customer._id == anotherCustomer._id)
+            ).toBeTruthy();
         });
     });
 });
