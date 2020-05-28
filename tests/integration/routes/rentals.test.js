@@ -26,8 +26,9 @@ describe("/api/rentals", () => {
         // Save a Movie
         movie = new Movie({
             title: "A Movie",
-            genre: genre._id,
-            dailyRentalRate: 2
+            dailyRentalRate: 2,
+            numberInStock: 10,
+            genre: genre._id
         });
         await movie.save();
 
@@ -169,16 +170,8 @@ describe("/api/rentals", () => {
             await anotherCustomer.save();
 
             payload = {
-                customer: {
-                    _id: anotherCustomer._id,
-                    name: anotherCustomer.name,
-                    phone: anotherCustomer.phone
-                },
-                movie: {
-                    _id: movie._id,
-                    title: movie.title,
-                    dailyRentalRate: movie.dailyRentalRate
-                }
+                customerId: anotherCustomer._id,
+                movieId: movie._id
             };
         });
 
@@ -201,26 +194,26 @@ describe("/api/rentals", () => {
             expect(res.status).toBe(403);
         });
 
-        it("should return 400 if customer is not provided", async () => {
-            payload.customer = {};
+        it("should return 400 if customerId is not provided", async () => {
+            payload.customerId = "";
             const res = await exec();
             expect(res.status).toBe(400);
         });
 
-        it("should return 400 if movie is not provided", async () => {
-            payload.movie = {};
-            const res = await exec();
-            expect(res.status).toBe(400);
-        });
-
-        it("should return 400 if customer id is not found", async () => {
-            payload.customer._id = mongoose.Types.ObjectId();
+        it("should return 400 if movieId is not provided", async () => {
+            payload.movieId = "";
             const res = await exec();
             expect(res.status).toBe(400);
         });
 
         it("should return 400 if customer id is not found", async () => {
-            payload.movie._id = mongoose.Types.ObjectId();
+            payload.customerId = mongoose.Types.ObjectId();
+            const res = await exec();
+            expect(res.status).toBe(400);
+        });
+
+        it("should return 400 if movie id is not found", async () => {
+            payload.movieId = mongoose.Types.ObjectId();
             const res = await exec();
             expect(res.status).toBe(400);
         });
