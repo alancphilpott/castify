@@ -217,5 +217,18 @@ describe("/api/rentals", () => {
             const res = await exec();
             expect(res.status).toBe(400);
         });
+
+        it("should return 400 if chosen movie is not in stock", async () => {
+            await Movie.updateOne(
+                { _id: movie._id },
+                {
+                    $set: {
+                        numberInStock: 0
+                    }
+                }
+            );
+            const res = await exec();
+            expect(res.status).toBe(400);
+        });
     });
 });
