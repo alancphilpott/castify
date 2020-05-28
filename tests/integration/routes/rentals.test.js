@@ -156,4 +156,73 @@ describe("/api/rentals", () => {
             );
         });
     });
+
+    describe("POST /", () => {
+        let payload;
+        let anotherCustomer;
+
+        beforeEach(async () => {
+            anotherCustomer = new Customer({
+                name: "Another Customer",
+                phone: "987654321"
+            });
+            await anotherCustomer.save();
+
+            payload = {
+                customer: {
+                    _id: anotherCustomer._id,
+                    name: anotherCustomer.name,
+                    phone: anotherCustomer.phone
+                },
+                movie: {
+                    _id: movie._id,
+                    title: movie.title,
+                    dailyRentalRate: movie.dailyRentalRate
+                }
+            };
+        });
+
+        const exec = () => {
+            return request(server)
+                .post(endpoint)
+                .set("x-auth-token", token)
+                .send(payload);
+        };
+
+        it("should return 401 if no auth token provided", async () => {
+            token = "";
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
+
+        it("should return 403 if user is not admin", async () => {
+            token = new User().generateAuthToken();
+            const res = await exec();
+            expect(res.status).toBe(403);
+        });
+
+        it("should return 400 if customer is not provided", async () => {
+            payload.customer = {};
+            const res = await exec();
+            expect(res.status).toBe(400);
+        });
+
+        it("should return 400 if movie is not provided", async () => {
+            payload.movie = {};
+            const res = await exec();
+            expect(res.status).toBe(400);
+        });
+
+        it("should return 400 if customer id is not found", async () => {
+            payload.customer._id = mongoose.Types.ObjectId();
+            const res = await exec();
+            expect(res.status).toBe(400);
+        });
+
+        it("should return 400 if customer id is not found", async () => {
+            payload.movie._id = mongoose.Types.ObjectId();
+            const res = await exec();
+            expect(res.status).toBe(400);
+        });
+    });
 });
