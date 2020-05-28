@@ -230,5 +230,18 @@ describe("/api/rentals", () => {
             const res = await exec();
             expect(res.status).toBe(400);
         });
+
+        it("should return valid rental in body of response", async () => {
+            const res = await exec();
+            expect(res.status).toBe(200);
+            expect(Object.keys(res.body)).toEqual(
+                expect.arrayContaining(["_id", "customer", "movie", "dateOut"])
+            );
+            expect(res.body).toHaveProperty(
+                "customer.name",
+                "Another Customer"
+            );
+            expect(res.body).toHaveProperty("movie.title", "A Movie");
+        });
     });
 });
