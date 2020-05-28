@@ -1,4 +1,5 @@
 const request = require("supertest");
+const mongoose = require("mongoose");
 const { User } = require("../../../models/user");
 const { Genre } = require("../../../models/genre");
 const { Movie } = require("../../../models/movie");
@@ -6,12 +7,13 @@ const { Rental } = require("../../../models/rental");
 const { Customer } = require("../../../models/customer");
 
 describe("/api/rentals", () => {
-    let endpoint = "/api/rentals";
+    let endpoint = "/api/rentals/";
 
     let server;
     let genre;
     let movie;
     let customer;
+    let rental, rentalId;
     let token;
 
     beforeEach(async () => {
@@ -36,6 +38,22 @@ describe("/api/rentals", () => {
             isGold: true
         });
         await customer.save();
+
+        // Save a Rental
+        rental = new Rental({
+            customer: {
+                _id: customer._id,
+                name: customer.name,
+                phone: customer.phone
+            },
+            movie: {
+                _id: movie._id,
+                title: movie.title,
+                dailyRentalRate: movie.dailyRentalRate
+            }
+        });
+        await rental.save();
+        rentalId = rental._id;
 
         token = new User({ isAdmin: true }).generateAuthToken();
     });
@@ -63,7 +81,7 @@ describe("/api/rentals", () => {
         });
 
         it("should return 404 if not rentals exist", async () => {
-            await Customer.deleteMany({});
+            await Rental.deleteMany({});
             const res = await exec();
             expect(res.status).toBe(404);
         });
@@ -76,32 +94,19 @@ describe("/api/rentals", () => {
             });
             await anotherCustomer.save();
 
-            await Rental.insertMany([
-                {
-                    customer: {
-                        _id: customer._id,
-                        name: customer.name,
-                        phone: customer.phone
-                    },
-                    movie: {
-                        _id: movie._id,
-                        title: movie.title,
-                        dailyRentalRate: movie.dailyRentalRate
-                    }
+            anotherRental = new Rental({
+                customer: {
+                    _id: anotherCustomer._id,
+                    name: anotherCustomer.name,
+                    phone: anotherCustomer.phone
                 },
-                {
-                    customer: {
-                        _id: anotherCustomer._id,
-                        name: anotherCustomer.name,
-                        phone: anotherCustomer.phone
-                    },
-                    movie: {
-                        _id: movie._id,
-                        title: movie.title,
-                        dailyRentalRate: movie.dailyRentalRate
-                    }
+                movie: {
+                    _id: movie._id,
+                    title: movie.title,
+                    dailyRentalRate: movie.dailyRentalRate
                 }
-            ]);
+            });
+            await anotherRental.save();
 
             const res = await exec();
             expect(res.status).toBe(200);
@@ -112,6 +117,33 @@ describe("/api/rentals", () => {
             expect(
                 res.body.some((r) => r.customer._id == anotherCustomer._id)
             ).toBeTruthy();
+        });
+    });
+
+    describe("GET /:id", () => {
+        const exec = () => {
+            return request(server)
+                .get(endpoint + rentalId)
+                .set("x-auth-token", token)
+                .send();
+        };
+
+        it("should return 401 if no auth token provided", async () => {
+            token = "";
+            const res = await exec();
+            expect(res.status).toBe(401);
+        });
+
+        it("should return 400 if invalid id is provided", async () => {
+            rentalId = "1";
+            const res = await exec();
+            expect(res.status).toBe(400);
+        });
+
+        it("should return 404 if no rental exists for given id", async () => {
+            rentalId = mongoose.Types.ObjectId();
+            const res = await exec();
+            expect(res.status).toBe(404);
         });
     });
 });
