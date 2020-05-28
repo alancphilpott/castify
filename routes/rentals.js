@@ -7,6 +7,7 @@ const { Movie } = require("../models/movie");
 const admin = require("../middleware/admin");
 const { Customer } = require("../models/customer");
 const { Rental, validate } = require("../models/rental");
+const validateObjectId = require("../middleware/validateObjectId");
 
 Fawn.init(mongoose);
 
@@ -16,7 +17,7 @@ router.get("/", auth, async (req, res) => {
     res.send(rentals);
 });
 
-router.get("/:id", auth, async (req, res) => {
+router.get("/:id", [auth, validateObjectId], async (req, res) => {
     const rental = await Rental.findById(req.params.id);
     if (!rental) return res.status(404).send("Rental Not Found");
     res.send(rental);
