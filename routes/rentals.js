@@ -49,19 +49,11 @@ router.post("/", [auth, admin], async (req, res) => {
         }
     });
 
-    try {
-        await Fawn.Task()
-            .save("rentals", rental)
-            .update(
-                "movies",
-                { _id: movie._id },
-                { $inc: { numberInStock: -1 } }
-            )
-            .run();
-        res.send(rental);
-    } catch (ex) {
-        res.status(500).send("Interal Server Error");
-    }
+    await Fawn.Task()
+        .save("rentals", rental)
+        .update("movies", { _id: movie._id }, { $inc: { numberInStock: -1 } })
+        .run();
+    res.send(rental);
 });
 
 module.exports = router;
