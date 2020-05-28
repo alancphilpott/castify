@@ -6,7 +6,8 @@ const auth = require("../middleware/auth");
 const { Movie } = require("../models/movie");
 const admin = require("../middleware/admin");
 const { Customer } = require("../models/customer");
-const { Rental, validate } = require("../models/rental");
+const validate = require("../middleware/validate");
+const { Rental, validateRental } = require("../models/rental");
 const validateObjectId = require("../middleware/validateObjectId");
 
 Fawn.init(mongoose);
@@ -23,10 +24,7 @@ router.get("/:id", [auth, validateObjectId], async (req, res) => {
     res.send(rental);
 });
 
-router.post("/", [auth, admin], async (req, res) => {
-    const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
+router.post("/", [auth, admin, validate(validateRental)], async (req, res) => {
     const customer = await Customer.findById(req.body.customerId);
     if (!customer) return res.status(400).send("Invalid Customer");
 
