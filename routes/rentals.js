@@ -10,13 +10,13 @@ const { Rental, validate } = require("../models/rental");
 
 Fawn.init(mongoose);
 
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
     const rentals = await Rental.find().sort({ dateOut: 1 });
     if (rentals.length === 0) return res.status(404).send("No Rentals Found");
     res.send(rentals);
 });
 
-router.get("/:id", async (req, res) => {
+router.get("/:id", auth, async (req, res) => {
     const rental = await Rental.findById(req.params.id);
     if (!rental) return res.status(404).send("Rental Not Found");
     res.send(rental);
