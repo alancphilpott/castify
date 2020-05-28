@@ -243,5 +243,11 @@ describe("/api/rentals", () => {
             );
             expect(res.body).toHaveProperty("movie.title", "A Movie");
         });
+
+        it("should decrease movie stock if rental is valid", async () => {
+            await exec();
+            const movieInDb = await Movie.findById(movie._id);
+            expect(movieInDb.numberInStock).toBe(movie.numberInStock - 1);
+        });
     });
 });
