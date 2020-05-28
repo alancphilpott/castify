@@ -33,6 +33,9 @@ router.post("/", [auth, admin], async (req, res) => {
     const movie = await Movie.findById(req.body.movieId);
     if (!movie) return res.status(400).send("Invalid Movie");
 
+    if (movie.numberInStock === 0)
+        return res.status(400).send("Movie Not In Stock");
+
     const rental = new Rental({
         customer: {
             _id: customer._id,
