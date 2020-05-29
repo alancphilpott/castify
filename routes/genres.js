@@ -8,7 +8,7 @@ const validateObjectId = require("../middleware/validateObjectId");
 
 router.get("/", async (req, res) => {
     const genres = await Genre.find().sort({ name: 1 });
-    // if (genres.length === 0) return res.status(404).send("No Existing Genres");
+    if (genres.length === 0) return res.status(404).send("No Existing Genres");
     res.send(genres);
 });
 
