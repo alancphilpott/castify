@@ -11,15 +11,21 @@ Once installed, ensure the service is running on your system.
 
 ## Install Dependencies
 Navigate to the project directory and run the following command.
-    npm i
+```
+npm i
+```
 
 ## Run Tests
 Ensure everything is working correctly.
-    npm test
+```
+npm test
+```
 
 ## Start Server
 Now run the application.
-    node index.js
+```
+node index.js
+```
 
 This will start the application on port number 3000.
 To change this, navigate to **config/default.json**.
@@ -32,7 +38,11 @@ This key is called **jwtPrivateKey** and can be found in **config/default.json**
 Below shows how to set this env var to a default value.
 
 Windows
-    set vidly_jwtPrivateKey=yourSecretKey
+```
+set vidly_jwtPrivateKey=yourSecretKey
+```
 
 Mac
-    export vidly_jwtPrivateKey=yourSecretKey
+```
+export vidly_jwtPrivateKey=yourSecretKey
+```
