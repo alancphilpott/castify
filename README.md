@@ -2,6 +2,8 @@
 
 A backend Movie Rental Service built with Node.js, the Express Web Framework and Mongoose Object Modelling Tool.
 
+View Live Preview [Heroku](https://castify.herokuapp.com/api/movies) - [AWS EC2 (May Not Be Running)](http://34.245.145.142:3000/api/movies)
+
 # Setup
 These steps explain how to get the application running on a local machine.
 
