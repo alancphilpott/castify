@@ -4,6 +4,8 @@ const express = require("express");
 const winston = require("winston");
 const app = express();
 
+app.set("view engine", "pug");
+
 require("./startup/logging")();
 require("./startup/config")();
 require("./startup/routes")(app);

@@ -1,4 +1,5 @@
 const express = require("express");
+const home = require("../routes/home");
 const auth = require("../routes/auth");
 const users = require("../routes/users");
 const genres = require("../routes/genres");
@@ -13,6 +14,7 @@ module.exports = function (app) {
     app.use(express.json());
 
     // App Routes
+    app.use("/", home);
     app.use("/api/genres", genres);
     app.use("/api/customers", customers);
     app.use("/api/movies", movies);
