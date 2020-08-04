@@ -66,8 +66,12 @@ rentalSchema.statics.lookup = function (rentalId, customerId, movieId) {
 
 rentalSchema.methods.return = function () {
     this.dateIn = new Date();
-    this.rentalFee =
-        moment().diff(this.dateOut, "days") * this.movie.dailyRentalRate;
+
+    this.rentalFee = this.customer.isGold
+        ? moment().diff(this.dateOut, "days") *
+          this.movie.dailyRentalRate *
+          0.75
+        : moment().diff(this.dateOut, "days") * this.movie.dailyRentalRate;
 };
 
 const Rental = mongoose.model("Rental", rentalSchema);

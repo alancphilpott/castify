@@ -37,6 +37,7 @@ router.post("/", [auth, admin, validate(validateRental)], async (req, res) => {
     const rental = new Rental({
         customer: {
             _id: customer._id,
+            isGold: customer.isGold,
             name: customer.name,
             phone: customer.phone
         },
