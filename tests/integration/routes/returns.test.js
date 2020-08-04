@@ -51,7 +51,7 @@ describe("/api/returns", () => {
         });
         await rental.save();
 
-        payload = { customerId, movieId };
+        payload = { rentalId: rental._id, customerId, movieId };
     });
 
     afterEach(async () => {

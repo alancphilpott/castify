@@ -7,7 +7,11 @@ const { Rental } = require("../models/rental");
 const validate = require("../middleware/validate");
 
 router.post("/", [auth, validate(validateReturn)], async (req, res) => {
-    const rental = await Rental.lookup(req.body.customerId, req.body.movieId);
+    const rental = await Rental.lookup(
+        req.body.rentalId,
+        req.body.customerId,
+        req.body.movieId
+    );
     if (!rental) return res.status(404).send("Rental Not Found");
 
     if (rental.dateIn) return res.status(400).send("Rental Already Processed");
@@ -29,6 +33,7 @@ router.post("/", [auth, validate(validateReturn)], async (req, res) => {
 
 function validateReturn(aReturn) {
     const schema = Joi.object({
+        rentalId: Joi.objectId().required(),
         customerId: Joi.objectId().required(),
         movieId: Joi.objectId().required()
     });
