@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+    web:
+        build:
+            context: .
+        ports:
+            - "3000:3000"
+        environment:
+            - PORT=3000
+            - castify_jwtPrivateKey=SECRETKEY
+            - "castify_db=mongodb://mongo:27017/castify"
+        volumes:
+            - "./:/code"
+        command: npm start
+    mongo:
+        image: "mongo:latest"
+        ports:
+            - "27017:27017"
+        volumes:
+            - "mongodb:/data/db"
+            - "mongodb_config:/data/configdb"
+volumes:
+    mongodb:
+    mongodb_config:
+networks:
+    mongodb:
