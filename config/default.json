@@ -1,5 +1,5 @@
 {
     "jwtPrivateKey": "unsecureKey",
-    "db": "mongodb://localhost/castify",
+    "db": "mongodb://mongodb:27017/castify",
     "port": "3000"
 }
