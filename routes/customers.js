@@ -6,7 +6,7 @@ const validate = require("../middleware/validate");
 const validateObjectId = require("../middleware/validateObjectId");
 const { Customer, validateCustomer } = require("../models/customer");
 
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
     const customers = await Customer.find().sort({ name: 1 });
     if (customers.length === 0)
         return res.status(404).send("No Customers Found");

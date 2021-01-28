@@ -4,3 +4,7 @@ html
     body
         h1=header
         p=message
+    ul
+        each route in ["/","api/genres","api/movies","api/customers","api/users/me","api/rentals"]
+            a(href=route) #{route}
+            | #{' | '}
