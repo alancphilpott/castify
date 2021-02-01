@@ -1,6 +1,6 @@
 # Introduction
 
-A backend Movie Rental Service built with Node.js, the Express Web Framework and Mongoose Object Modelling Tool.
+A backend Movie Rental Service built with Node.js, the Express Web Framework and Mongoose ODM (Object Document Mapper).
 
 View Live Preview [Heroku](https://castify.herokuapp.com/api/movies) - [AWS EC2 (May Not Be Running)](http://34.245.145.142:3000/api/movies)
 
